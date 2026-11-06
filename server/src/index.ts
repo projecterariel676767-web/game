@@ -66,6 +66,24 @@ app.get('/api/models/:id',async(req,res)=>{
  }catch(error:any){console.warn('[aircraft-model] proxy request failed',{id:req.params.id,error:error?.message||String(error)});res.status(502).json({error:'Could not retrieve aircraft model'});}
 });
 
+
+app.get('/api/models/:id/*',async(req,res)=>{
+ const source=aircraftModelSources[req.params.id],relative=String(req.params[0]||'');
+ if(!source||!relative||relative.split('/').some((part:string)=>!part||part==='.'||part==='..'))return res.status(404).end();
+ try{
+  const base=new URL(source),asset=new URL(relative,source);
+  if(asset.origin!==base.origin||!asset.pathname.startsWith(base.pathname.slice(0,base.pathname.lastIndexOf('/')+1)))return res.status(400).end();
+  const upstream=await fetch(asset,{headers:{'User-Agent':'PinWorld-Model-Proxy/1.0'},signal:AbortSignal.timeout(20000)});
+  if(!upstream.ok){console.warn('[aircraft-model-asset] upstream failed',{id:req.params.id,path:relative,status:upstream.status});return res.status(502).end();}
+  const bytes=Buffer.from(await upstream.arrayBuffer());
+  const ext=relative.toLowerCase().split('.').pop();
+  const types:Record<string,string>={png:'image/png',jpg:'image/jpeg',jpeg:'image/jpeg',webp:'image/webp',ktx2:'image/ktx2',bin:'application/octet-stream'};
+  res.setHeader('Content-Type',upstream.headers.get('content-type')||types[ext||'']||'application/octet-stream');
+  res.setHeader('Cache-Control','public, max-age=86400, stale-while-revalidate=604800');
+  res.send(bytes);
+ }catch(error:any){console.warn('[aircraft-model-asset] proxy failed',{id:req.params.id,path:relative,error:error?.message||String(error)});res.status(502).end();}
+});
+
 app.get('/api/config',(_req,res)=>res.json({cesiumIonToken:process.env.CESIUM_ION_TOKEN||null,weatherConfigured:!!process.env.OPENWEATHER_API_KEY,aiConfigured:!!process.env.GROQ_API_KEY}));
 const weatherLayers=new Set(['temp_new','precipitation_new','wind_new','pressure_new','clouds_new']);
 app.get('/api/weather/tiles/:layer/:z/:x/:y.png',async(req,res)=>{const key=process.env.OPENWEATHER_API_KEY;const {layer,z,x,y}=req.params;if(!key)return res.status(503).setHeader('X-Weather-Error','OPENWEATHER_API_KEY is not configured').end();if(!weatherLayers.has(layer)||![z,x,y].every(v=>/^\d+$/.test(v)))return res.status(400).end();try{const upstream=await fetch('https://tile.openweathermap.org/map/'+layer+'/'+z+'/'+x+'/'+y+'.png?appid='+encodeURIComponent(key),{signal:AbortSignal.timeout(12000)});if(!upstream.ok){const detail=(await upstream.text()).slice(0,240).replace(/[\\r\\n]+/g,' ');console.warn('[weather-tile] upstream rejected request',{layer,z,x,y,status:upstream.status,detail});return res.status(502).setHeader('X-Weather-Upstream-Status',String(upstream.status)).end();}const bytes=Buffer.from(await upstream.arrayBuffer());if(bytes.length<8||bytes[0]!==137||bytes[1]!==80||bytes[2]!==78||bytes[3]!==71){console.warn('[weather-tile] upstream response was not a PNG',{layer,z,x,y,bytes:bytes.length});return res.status(502).end();}res.setHeader('Content-Type','image/png');res.setHeader('Cache-Control','public, max-age=300');res.send(bytes);}catch(error:any){console.warn('[weather-tile] upstream request failed',{layer,z,x,y,error:error?.message||String(error)});return res.status(502).end();}});
