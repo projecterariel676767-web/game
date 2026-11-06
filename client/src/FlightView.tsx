@@ -24,8 +24,9 @@ export default function FlightView({speed,altitude,modelId,modelUrl,origin,onExi
    frame=requestAnimationFrame(tick);
   }catch(e){console.error('Cesium flight initialization failed',e);setModelState('Cesium initialization failed. Check browser console and Cesium token.');}}
   void init();
+  const keydown=(e:KeyboardEvent)=>{const k=e.key.toLowerCase();if(k==='a')heading-=.035;if(k==='d')heading+=.035;if(k==='w')pitch=Math.min(.45,pitch+.02);if(k==='s')pitch=Math.max(-.45,pitch-.02);};window.addEventListener('keydown',keydown);
   const cockpit=host.querySelector<HTMLButtonElement>('[data-view="cockpit"]');const chase=host.querySelector<HTMLButtonElement>('[data-view="chase"]');const setMode=(m:'cockpit'|'chase')=>{mode=m;};const c=()=>setMode('cockpit'),ch=()=>setMode('chase');cockpit?.addEventListener('click',c);chase?.addEventListener('click',ch);
-  return()=>{alive=false;cancelAnimationFrame(frame);cockpit?.removeEventListener('click',c);chase?.removeEventListener('click',ch);if(viewer&&!viewer.isDestroyed())viewer.destroy();};
+  return()=>{alive=false;cancelAnimationFrame(frame);window.removeEventListener('keydown',keydown);cockpit?.removeEventListener('click',c);chase?.removeEventListener('click',ch);if(viewer&&!viewer.isDestroyed())viewer.destroy();};
  },[modelId,modelUrl]);
  return <div className="flight-scene" ref={mount}>
   <div className="flight-scene-hud"><span>PIN WORLD · CESIUM FLIGHT SIMULATOR</span><span>SPD {speed} KM/H · ALT {altitude.toLocaleString()} M</span><small>ANIMATED SKY · GLOBE · OCEAN · LIVE AIRCRAFT</small><small>{modelState}</small></div>
