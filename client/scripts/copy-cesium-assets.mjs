@@ -3,7 +3,7 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const here = dirname(fileURLToPath(import.meta.url));
-const source = resolve(here, '../../node_modules/cesium/Build/Cesium');
+const source = resolve(here, '../node_modules/cesium/Build/Cesium');
 const target = resolve(here, '../public/cesium');
 
 if (!existsSync(source)) {
