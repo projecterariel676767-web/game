@@ -1,1 +1,1 @@
-import { defineConfig } from 'vite'; import react from '@vitejs/plugin-react'; export default defineConfig({plugins:[react()],server:{host:'0.0.0.0'},define:{'CESIUM_BASE_URL':JSON.stringify('/cesium/')}});
+import { defineConfig } from 'vite'; import react from '@vitejs/plugin-react'; export default defineConfig({plugins:[react()],server:{host:'0.0.0.0',proxy:{'/api':{target:'http://127.0.0.1:10000',changeOrigin:true},'/socket.io':{target:'http://127.0.0.1:10000',ws:true}}},define:{'CESIUM_BASE_URL':JSON.stringify('/cesium/')}});
