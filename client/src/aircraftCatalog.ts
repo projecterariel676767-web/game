@@ -21,16 +21,16 @@ export const AIRCRAFT_ASSETS:AircraftAsset[]=[
     "name": "Boeing 737",
     "category": "Airliner",
     "url": "/api/models/b737",
-    "source": "kewonit/aeris · FlightAirMap / Flightradar24",
-    "license": "GPL-2.0"
+    "source": "amvlab/aircraft-models · B737 livery GLB",
+    "license": "CC BY 4.0 · attribution required"
   },
   {
     "id": "drone",
     "name": "Unmanned Aerial Vehicle",
     "category": "Drone",
     "url": "/api/models/drone",
-    "source": "kewonit/aeris · FlightAirMap",
-    "license": "GPL-2.0"
+    "source": "amvlab/aircraft-models · drone GLB",
+    "license": "CC BY 4.0 · attribution required"
   },
   {
     "id": "fighter",
@@ -61,40 +61,40 @@ export const AIRCRAFT_ASSETS:AircraftAsset[]=[
     "name": "Narrowbody Airliner",
     "category": "Airliner",
     "url": "/api/models/narrowbody",
-    "source": "kewonit/aeris · FlightAirMap",
-    "license": "GPL-2.0"
+    "source": "amvlab/aircraft-models · A320 livery GLB",
+    "license": "CC BY 4.0 · attribution required"
   },
   {
     "id": "regional-jet",
     "name": "Regional Jet",
     "category": "Regional jet",
     "url": "/api/models/regional-jet",
-    "source": "kewonit/aeris · FlightAirMap",
-    "license": "GPL-2.0"
+    "source": "amvlab/aircraft-models · A350 livery GLB",
+    "license": "CC BY 4.0 · attribution required"
   },
   {
     "id": "turboprop",
     "name": "Turboprop Aircraft",
     "category": "Turboprop",
     "url": "/api/models/turboprop",
-    "source": "kewonit/aeris · FlightAirMap",
-    "license": "GPL-2.0"
+    "source": "edison16a/pheonix · ATR 72 model by Oyan3D",
+    "license": "CC BY 4.0 · attribution required"
   },
   {
     "id": "widebody-2eng",
     "name": "Twin-engine Widebody",
     "category": "Airliner",
     "url": "/api/models/widebody-2eng",
-    "source": "kewonit/aeris · FlightAirMap",
-    "license": "GPL-2.0"
+    "source": "amvlab/aircraft-models · B787 livery GLB",
+    "license": "CC BY 4.0 · attribution required"
   },
   {
     "id": "widebody-4eng",
     "name": "Four-engine Widebody / A380",
     "category": "Airliner",
     "url": "/api/models/widebody-4eng",
-    "source": "kewonit/aeris · FlightAirMap",
-    "license": "GPL-2.0"
+    "source": "amvlab/aircraft-models · A380 livery GLB",
+    "license": "CC BY 4.0 · attribution required"
   },
   {
     "id": "boeing747",
