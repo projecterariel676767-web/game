@@ -29,6 +29,43 @@ app.put('/api/preferences',auth,async(req:any,res)=>{const update:any={updatedAt
 app.get('/api/messages',auth,async(req:any,res)=>{const messages=await Message.find({userId:req.userId}).sort({createdAt:1}).limit(200);res.json({messages});});
 app.post('/api/messages',auth,async(req:any,res)=>{const content=String(req.body?.content||'').trim();if(!content||content.length>12000)return res.status(400).json({error:'Message must contain 1–12000 characters'});const message=await Message.create({userId:req.userId,role:'user',content});res.status(201).json({message});});
 app.post('/api/devices',auth,async(req:any,res)=>{const device=await Device.create({userId:req.userId,deviceType:String(req.body?.deviceType||'unknown').slice(0,40),name:String(req.body?.name||'My device').slice(0,80),metadata:req.body?.metadata||{}});res.status(201).json({device});});
+
+const aircraftModelSources:Record<string,string>={
+ 's7-a320':'https://raw.githubusercontent.com/wprojecter-cmd/flight-simulator/main/airbus_a320_s7_airlines.glb',
+ darkstar:'https://raw.githubusercontent.com/wprojecter-cmd/flight-simulator/main/static/models/lockheed_martin_sr72_darkstar__topgun_maverick.glb',
+ b737:'https://raw.githubusercontent.com/kewonit/aeris/main/public/models/aircraft/b737.glb',
+ drone:'https://raw.githubusercontent.com/kewonit/aeris/main/public/models/aircraft/drone.glb',
+ fighter:'https://raw.githubusercontent.com/kewonit/aeris/main/public/models/aircraft/fighter.glb',
+ glider:'https://raw.githubusercontent.com/kewonit/aeris/main/public/models/aircraft/glider.glb',
+ helicopter:'https://raw.githubusercontent.com/kewonit/aeris/main/public/models/aircraft/helicopter.glb',
+ narrowbody:'https://raw.githubusercontent.com/kewonit/aeris/main/public/models/aircraft/narrowbody.glb',
+ 'regional-jet':'https://raw.githubusercontent.com/kewonit/aeris/main/public/models/aircraft/regional-jet.glb',
+ turboprop:'https://raw.githubusercontent.com/kewonit/aeris/main/public/models/aircraft/turboprop.glb',
+ 'widebody-2eng':'https://raw.githubusercontent.com/kewonit/aeris/main/public/models/aircraft/widebody-2eng.glb',
+ 'widebody-4eng':'https://raw.githubusercontent.com/kewonit/aeris/main/public/models/aircraft/widebody-4eng.glb',
+ boeing747:'https://raw.githubusercontent.com/edison16a/pheonix/main/public/models/airplane.glb',
+ atr72:'https://raw.githubusercontent.com/edison16a/pheonix/main/public/models/atr72.glb',
+ boeing787:'https://raw.githubusercontent.com/edison16a/pheonix/main/public/models/b789.glb',
+ bell206:'https://raw.githubusercontent.com/edison16a/pheonix/main/public/models/bell206.glb',
+ cessna172:'https://raw.githubusercontent.com/edison16a/pheonix/main/public/models/c172.glb',
+ citation:'https://raw.githubusercontent.com/edison16a/pheonix/main/public/models/citation2.glb',
+ mq9:'https://raw.githubusercontent.com/edison16a/pheonix/main/public/models/mq9.glb',
+ 'private-jet':'https://raw.githubusercontent.com/edison16a/pheonix/main/public/models/jet.glb',
+ mig29:'https://raw.githubusercontent.com/lekandigital/flight-playground/main/dist/flightgear/mig29/model.glb',
+ p51d:'https://raw.githubusercontent.com/lekandigital/flight-playground/main/dist/flightgear/p51d/model.glb'
+};
+app.get('/api/models/:id',async(req,res)=>{
+ const source=aircraftModelSources[req.params.id];
+ if(!source)return res.status(404).json({error:'Unknown aircraft model'});
+ try{
+  const upstream=await fetch(source,{headers:{'User-Agent':'PinWorld-Model-Proxy/1.0'},signal:AbortSignal.timeout(30000)});
+  if(!upstream.ok){console.warn('[aircraft-model] upstream failed',{id:req.params.id,status:upstream.status,source});return res.status(502).json({error:'Aircraft model source unavailable',upstreamStatus:upstream.status});}
+  const bytes=Buffer.from(await upstream.arrayBuffer());
+  if(bytes.length<20||bytes.toString('ascii',0,4)!=='glTF'){console.warn('[aircraft-model] invalid GLB payload',{id:req.params.id,bytes:bytes.length});return res.status(502).json({error:'Source did not return a valid GLB'});}
+  res.setHeader('Content-Type','model/gltf-binary');res.setHeader('Content-Length',String(bytes.length));res.setHeader('Cache-Control','public, max-age=86400, stale-while-revalidate=604800');res.send(bytes);
+ }catch(error:any){console.warn('[aircraft-model] proxy request failed',{id:req.params.id,error:error?.message||String(error)});res.status(502).json({error:'Could not retrieve aircraft model'});}
+});
+
 app.get('/api/config',(_req,res)=>res.json({cesiumIonToken:process.env.CESIUM_ION_TOKEN||null,weatherConfigured:!!process.env.OPENWEATHER_API_KEY,aiConfigured:!!process.env.GROQ_API_KEY}));
 const weatherLayers=new Set(['temp_new','precipitation_new','wind_new','pressure_new','clouds_new']);
 app.get('/api/weather/tiles/:layer/:z/:x/:y.png',async(req,res)=>{const key=process.env.OPENWEATHER_API_KEY;const {layer,z,x,y}=req.params;if(!key)return res.status(503).setHeader('X-Weather-Error','OPENWEATHER_API_KEY is not configured').end();if(!weatherLayers.has(layer)||![z,x,y].every(v=>/^\d+$/.test(v)))return res.status(400).end();try{const upstream=await fetch('https://tile.openweathermap.org/map/'+layer+'/'+z+'/'+x+'/'+y+'.png?appid='+encodeURIComponent(key),{signal:AbortSignal.timeout(12000)});if(!upstream.ok){const detail=(await upstream.text()).slice(0,240).replace(/[\\r\\n]+/g,' ');console.warn('[weather-tile] upstream rejected request',{layer,z,x,y,status:upstream.status,detail});return res.status(502).setHeader('X-Weather-Upstream-Status',String(upstream.status)).end();}const bytes=Buffer.from(await upstream.arrayBuffer());if(bytes.length<8||bytes[0]!==137||bytes[1]!==80||bytes[2]!==78||bytes[3]!==71){console.warn('[weather-tile] upstream response was not a PNG',{layer,z,x,y,bytes:bytes.length});return res.status(502).end();}res.setHeader('Content-Type','image/png');res.setHeader('Cache-Control','public, max-age=300');res.send(bytes);}catch(error:any){console.warn('[weather-tile] upstream request failed',{layer,z,x,y,error:error?.message||String(error)});return res.status(502).end();}});
