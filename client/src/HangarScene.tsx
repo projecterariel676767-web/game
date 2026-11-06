@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {AIRCRAFT_ASSETS,getAircraft} from './aircraftCatalog';
+import {applyAircraftFinish} from './aircraftMaterials';
 
 type Props={selectedId:string;onSelect:(id:string)=>void};
 export default function HangarScene({selectedId,onSelect}:Props){
@@ -39,11 +40,11 @@ export default function HangarScene({selectedId,onSelect}:Props){
    const root=gltf.scene;root.updateMatrixWorld(true);
    const bounds=new THREE.Box3().setFromObject(root),size=bounds.getSize(new THREE.Vector3()),center=bounds.getCenter(new THREE.Vector3());
    const maxDim=Math.max(size.x,size.y,size.z)||1;root.scale.setScalar(19/maxDim);root.position.x=-center.x*root.scale.x;root.position.z=-center.z*root.scale.z;root.position.y=-bounds.min.y*root.scale.y;
-   root.traverse(o=>{if(o instanceof THREE.Mesh){o.castShadow=true;o.receiveShadow=true;if(o.material instanceof THREE.MeshStandardMaterial){o.material.envMapIntensity=1.1;}}});
+   applyAircraftFinish(root,selected.id);
    scene.add(root);aircraftRef.current=root;
    if(gltf.animations.length){const mixer=new THREE.AnimationMixer(root);gltf.animations.forEach(clip=>mixer.clipAction(clip).play());mixerRef.current=mixer;}
    setLoading(false);
-  },undefined,err=>{if(token!==loadToken.current)return;console.error('Aircraft GLB failed to load:',selected.url,err);setError('Could not load this GLB. Check the source URL or its CORS access.');setLoading(false);});
+  },undefined,err=>{if(token!==loadToken.current)return;console.error('Aircraft GLB failed to load:',selected.url,err);setError('Could not load this GLB through /api/models. Check Render logs for the upstream model error.');setLoading(false);});
   return()=>{if(loadToken.current===token)loadToken.current++;};
  },[selected.url]);
  return <section className="hangar-scene-wrap"><div className="hangar-toolbar"><div><span className="eyebrow">3D HANGAR · GLB AIRCRAFT LIBRARY</span><h3>Aircraft showroom</h3></div><div className="hangar-select"><label htmlFor="aircraft-model">Aircraft model</label><select id="aircraft-model" value={selectedId} onChange={e=>onSelect(e.target.value)}>{AIRCRAFT_ASSETS.map(a=><option key={a.id} value={a.id}>{a.name} · {a.category}</option>)}</select></div></div><div className="hangar-canvas" ref={mount}><div className="hangar-hint">Drag to rotate · Scroll to zoom · GLB animations auto-play</div>{loading&&<div className="hangar-status">Loading {selected.name}…</div>}{error&&<div className="hangar-error">{error}</div>}</div><div className="hangar-caption"><b>{selected.name}</b><span>{selected.category} · {selected.source} · {selected.license}</span></div><div className="hangar-credit">22 selectable GLB aircraft, including 20 additional models · Models load directly from their published source links. Third-party model rights and source terms remain applicable.</div></section>;
