@@ -8,6 +8,7 @@ import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
 import { Server } from 'socket.io';
 import { z } from 'zod';
+import multer from 'multer';
 import { User, Preferences, Message, Device } from './models.js';
 
 const app=express(); const server=http.createServer(app);
@@ -28,6 +29,34 @@ app.get('/api/preferences',auth,async(req:any,res)=>{const p=await Preferences.f
 app.put('/api/preferences',auth,async(req:any,res)=>{const update:any={updatedAt:new Date()};for(const key of ['earth','aircraft','device'])if(req.body?.[key]!==undefined)update[key]=req.body[key];if(update.earth?.opacity!==undefined)update.earth.opacity=Math.max(0,Math.min(1,Number(update.earth.opacity)));const p=await Preferences.findOneAndUpdate({userId:req.userId},{$set:update},{new:true,upsert:true});res.json({preferences:p});});
 app.get('/api/messages',auth,async(req:any,res)=>{const messages=await Message.find({userId:req.userId}).sort({createdAt:1}).limit(200);res.json({messages});});
 app.post('/api/messages',auth,async(req:any,res)=>{const content=String(req.body?.content||'').trim();if(!content||content.length>12000)return res.status(400).json({error:'Message must contain 1–12000 characters'});const message=await Message.create({userId:req.userId,role:'user',content});res.status(201).json({message});});
+const audioUpload=multer({storage:multer.memoryStorage(),limits:{fileSize:20*1024*1024,files:1}});
+async function groqReply(userId:string,content:string){
+ const key=process.env.GROQ_API_KEY;if(!key)throw Object.assign(new Error('Groq is not configured. Add GROQ_API_KEY in Render environment variables.'),{status:503});
+ const history=await Message.find({userId}).sort({createdAt:-1}).limit(12).lean();
+ const conversation=history.reverse().map((m:any)=>({role:m.role==='assistant'?'assistant':'user',content:m.content}));
+ const response=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{Authorization:'Bearer '+key,'Content-Type':'application/json'},body:JSON.stringify({model:process.env.GROQ_CHAT_MODEL||'llama-3.3-70b-versatile',messages:[{role:'system',content:'You are Pin World AI, a helpful assistant for geography, Earth observation, aviation, travel and general questions. Answer clearly in the language used by the user.'},...conversation,{role:'user',content}],temperature:0.6,max_tokens:1200}),signal:AbortSignal.timeout(45000)});
+ const data:any=await response.json().catch(()=>({}));if(!response.ok)throw Object.assign(new Error(data.error?.message||'Groq chat request failed'),{status:502});
+ return String(data.choices?.[0]?.message?.content||'I could not generate a response.');
+}
+app.post('/api/ai/chat',auth,async(req:any,res:any)=>{
+ const content=String(req.body?.content||'').trim();if(!content||content.length>12000)return res.status(400).json({error:'Message must contain 1–12000 characters'});
+ try{await Message.create({userId:req.userId,role:'user',content});const reply=await groqReply(req.userId,content);const answer=await Message.create({userId:req.userId,role:'assistant',content:reply});res.json({reply:answer});}
+ catch(e:any){res.status(e.status||502).json({error:e.message||'AI request failed'});}
+});
+app.post('/api/ai/voice',auth,audioUpload.single('audio'),async(req:any,res:any)=>{
+ if(!req.file)return res.status(400).json({error:'Audio file is required'});
+ const key=process.env.GROQ_API_KEY;if(!key)return res.status(503).json({error:'Groq is not configured. Add GROQ_API_KEY in Render environment variables.'});
+ try{
+  const form=new FormData();form.append('file',new Blob([req.file.buffer],{type:req.file.mimetype||'audio/webm'}),req.file.originalname||'voice.webm');form.append('model',process.env.GROQ_TRANSCRIPTION_MODEL||'whisper-large-v3-turbo');form.append('response_format','json');
+  const transcribed=await fetch('https://api.groq.com/openai/v1/audio/transcriptions',{method:'POST',headers:{Authorization:'Bearer '+key},body:form,signal:AbortSignal.timeout(60000)});
+  const transcriptData:any=await transcribed.json().catch(()=>({}));if(!transcribed.ok)throw Object.assign(new Error(transcriptData.error?.message||'Speech recognition failed'),{status:502});
+  const transcript=String(transcriptData.text||'').trim();if(!transcript)return res.status(422).json({error:'No speech was recognized. Please try again.'});
+  await Message.create({userId:req.userId,role:'user',content:transcript});
+  const reply=await groqReply(req.userId,transcript);
+  const answer=await Message.create({userId:req.userId,role:'assistant',content:reply});
+  res.json({transcript,reply:answer});
+ }catch(e:any){console.error('[groq-voice]',e.message||e);res.status(e.status||502).json({error:e.message||'Voice processing failed'});}
+});
 app.post('/api/devices',auth,async(req:any,res)=>{const device=await Device.create({userId:req.userId,deviceType:String(req.body?.deviceType||'unknown').slice(0,40),name:String(req.body?.name||'My device').slice(0,80),metadata:req.body?.metadata||{}});res.status(201).json({device});});
 
 const aircraftModelSources:Record<string,string>={
