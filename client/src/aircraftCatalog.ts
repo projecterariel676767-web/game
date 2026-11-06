@@ -49,14 +49,6 @@ export const AIRCRAFT_ASSETS:AircraftAsset[]=[
     "license": "GPL-2.0"
   },
   {
-    "id": "generic",
-    "name": "Generic A320-style Airliner",
-    "category": "Airliner",
-    "url": "https://raw.githubusercontent.com/kewonit/aeris/main/public/models/aircraft/generic.glb",
-    "source": "kewonit/aeris · FlightAirMap",
-    "license": "GPL-2.0"
-  },
-  {
     "id": "glider",
     "name": "Sailplane",
     "category": "Glider",
@@ -69,14 +61,6 @@ export const AIRCRAFT_ASSETS:AircraftAsset[]=[
     "name": "Utility Helicopter",
     "category": "Helicopter",
     "url": "https://raw.githubusercontent.com/kewonit/aeris/main/public/models/aircraft/helicopter.glb",
-    "source": "kewonit/aeris · FlightAirMap",
-    "license": "GPL-2.0"
-  },
-  {
-    "id": "light-prop",
-    "name": "Light Propeller Aircraft",
-    "category": "Light aircraft",
-    "url": "https://raw.githubusercontent.com/kewonit/aeris/main/public/models/aircraft/light-prop.glb",
     "source": "kewonit/aeris · FlightAirMap",
     "license": "GPL-2.0"
   },
@@ -185,12 +169,20 @@ export const AIRCRAFT_ASSETS:AircraftAsset[]=[
     "license": "CC-BY-4.0"
   },
   {
-    "id": "trainer",
-    "name": "Generic Airplane",
-    "category": "Trainer",
-    "url": "https://raw.githubusercontent.com/edison16a/pheonix/main/public/models/airplane.glb",
-    "source": "edison16a/pheonix · original Sketchfab model by zairiq-123",
-    "license": "CC-BY-4.0"
+    "id": "mig29",
+    "name": "Mikoyan MiG-29 Fulcrum",
+    "category": "Fighter",
+    "url": "https://raw.githubusercontent.com/lekandigital/flight-playground/main/dist/flightgear/mig29/model.glb",
+    "source": "lekandigital/flight-playground · FlightGear aircraft import",
+    "license": "GPL (version not specified in supplied notice)"
+  },
+  {
+    "id": "p51d",
+    "name": "North American P-51D Mustang",
+    "category": "Warbird",
+    "url": "https://raw.githubusercontent.com/lekandigital/flight-playground/main/dist/flightgear/p51d/model.glb",
+    "source": "lekandigital/flight-playground · FlightGear aircraft import",
+    "license": "GPL"
   }
 ];
 export const DEFAULT_AIRCRAFT_ID='s7-a320';
