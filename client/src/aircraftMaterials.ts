@@ -23,6 +23,8 @@ const finishes:Record<string,{body:number;accent:number;metal:number}> = {
  p51d:{body:0x9b8a63,accent:0x3b4f61,metal:0xadb6b6}
 };
 export function applyAircraftFinish(root:THREE.Object3D,id:string){
+ // The supplied S7 and Darkstar assets have deliberate source liveries: never repaint them.
+ const preserveSourceLivery=id==='s7-a320'||id==='darkstar';
  const finish=finishes[id]||{body:0xdce5eb,accent:0x346b91,metal:0x8799a5};
  root.traverse(object=>{
   if(!(object instanceof THREE.Mesh))return;
@@ -34,8 +36,13 @@ export function applyAircraftFinish(root:THREE.Object3D,id:string){
   const mapped=source.map(original=>{
    const material=original.clone() as THREE.MeshStandardMaterial;
    if('color' in material && !(material as any).map){
-    const target=glassPart?0x263b4b:rubberPart?0x20262b:accentPart?finish.accent:finish.body;
-    (material as any).color.setHex(target);
+    const color=(material as any).color as THREE.Color;
+    const isNeutralDefault=color.r>.92&&color.g>.92&&color.b>.92;
+    // Preserve authored paint, non-white materials and all source textures. Only tint unpainted white defaults.
+    if(!preserveSourceLivery&&isNeutralDefault){
+     const target=glassPart?0x263b4b:rubberPart?0x20262b:accentPart?finish.accent:finish.body;
+     color.setHex(target);
+    }
     if(material instanceof THREE.MeshStandardMaterial){
      material.metalness=glassPart ? .35 : rubberPart ? .05 : .22;
      material.roughness=glassPart ? .22 : rubberPart ? .82 : .48;
