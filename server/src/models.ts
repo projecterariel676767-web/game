@@ -1,0 +1,9 @@
+import mongoose, { Schema } from 'mongoose';
+const UserSchema = new Schema({ nickname:{type:String,required:true,trim:true,unique:true}, email:{type:String,required:true,unique:true,lowercase:true}, passwordHash:{type:String,required:true}, avatarUrl:String, createdAt:{type:Date,default:Date.now} });
+const PreferencesSchema = new Schema({ userId:{type:Schema.Types.ObjectId,ref:'User',unique:true,index:true}, earth:{mode:{type:String,default:'3d'},weatherLayer:{type:String,default:'none'},opacity:{type:Number,default:0.72},palettes:{type:Schema.Types.Mixed,default:{temperature:['#263b9a','#36b8d8','#f5d34d','#e84a36'],precipitation:['#d9f3ff','#4b9be8','#1744a0'],wind:['#e6f5d0','#73bf75','#315aaf'],pressure:['#e9ddff','#a17bd1','#493477']}}}, aircraft:{modelId:{type:String,default:'trainer-default'}}, device:{type:Schema.Types.Mixed,default:{}}, updatedAt:{type:Date,default:Date.now} });
+const MessageSchema = new Schema({ userId:{type:Schema.Types.ObjectId,ref:'User',index:true}, role:{type:String,enum:['user','assistant'],required:true}, content:{type:String,required:true}, attachments:[Schema.Types.Mixed], createdAt:{type:Date,default:Date.now} });
+const DeviceSchema = new Schema({ userId:{type:Schema.Types.ObjectId,ref:'User',index:true}, deviceType:String, name:String, metadata:Schema.Types.Mixed, registeredAt:{type:Date,default:Date.now} });
+export const User=mongoose.models.User||mongoose.model('User',UserSchema);
+export const Preferences=mongoose.models.Preferences||mongoose.model('Preferences',PreferencesSchema);
+export const Message=mongoose.models.Message||mongoose.model('Message',MessageSchema);
+export const Device=mongoose.models.Device||mongoose.model('Device',DeviceSchema);
