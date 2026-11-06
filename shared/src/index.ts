@@ -1,0 +1,1 @@
+export type EarthMode='3d'|'2d'|'2.5d';export type WeatherLayer='none'|'temperature'|'precipitation'|'wind'|'pressure'|'clouds';export interface Coordinates{lat:number;lon:number}export interface FlightRoute{origin:Coordinates;destination?:Coordinates}export interface PlayerState{lat:number;lon:number;altitude:number;heading:number;aircraftId:string}
