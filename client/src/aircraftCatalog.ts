@@ -4,7 +4,7 @@ export const AIRCRAFT_ASSETS:AircraftAsset[]=[
     "id": "s7-a320",
     "name": "Airbus A320 · S7 Airlines",
     "category": "Airliner",
-    "url": "https://raw.githubusercontent.com/wprojecter-cmd/flight-simulator/main/airbus_a320_s7_airlines.glb",
+    "url": "/api/models/s7-a320",
     "source": "User-supplied flight-simulator repository",
     "license": "Source repository terms"
   },
@@ -12,7 +12,7 @@ export const AIRCRAFT_ASSETS:AircraftAsset[]=[
     "id": "darkstar",
     "name": "SR-72 Darkstar",
     "category": "Experimental jet",
-    "url": "https://raw.githubusercontent.com/wprojecter-cmd/flight-simulator/main/static/models/lockheed_martin_sr72_darkstar__topgun_maverick.glb",
+    "url": "/api/models/darkstar",
     "source": "User-supplied flight-simulator repository",
     "license": "Source repository terms"
   },
@@ -20,7 +20,7 @@ export const AIRCRAFT_ASSETS:AircraftAsset[]=[
     "id": "b737",
     "name": "Boeing 737",
     "category": "Airliner",
-    "url": "https://raw.githubusercontent.com/kewonit/aeris/main/public/models/aircraft/b737.glb",
+    "url": "/api/models/b737",
     "source": "kewonit/aeris · FlightAirMap / Flightradar24",
     "license": "GPL-2.0"
   },
@@ -28,7 +28,7 @@ export const AIRCRAFT_ASSETS:AircraftAsset[]=[
     "id": "drone",
     "name": "Unmanned Aerial Vehicle",
     "category": "Drone",
-    "url": "https://raw.githubusercontent.com/kewonit/aeris/main/public/models/aircraft/drone.glb",
+    "url": "/api/models/drone",
     "source": "kewonit/aeris · FlightAirMap",
     "license": "GPL-2.0"
   },
@@ -36,7 +36,7 @@ export const AIRCRAFT_ASSETS:AircraftAsset[]=[
     "id": "fighter",
     "name": "Fighter Aircraft",
     "category": "Military jet",
-    "url": "https://raw.githubusercontent.com/kewonit/aeris/main/public/models/aircraft/fighter.glb",
+    "url": "/api/models/fighter",
     "source": "kewonit/aeris · FlightAirMap",
     "license": "GPL-2.0"
   },
@@ -44,7 +44,7 @@ export const AIRCRAFT_ASSETS:AircraftAsset[]=[
     "id": "glider",
     "name": "Sailplane",
     "category": "Glider",
-    "url": "https://raw.githubusercontent.com/kewonit/aeris/main/public/models/aircraft/glider.glb",
+    "url": "/api/models/glider",
     "source": "kewonit/aeris · FlightAirMap",
     "license": "GPL-2.0"
   },
@@ -52,7 +52,7 @@ export const AIRCRAFT_ASSETS:AircraftAsset[]=[
     "id": "helicopter",
     "name": "Utility Helicopter",
     "category": "Helicopter",
-    "url": "https://raw.githubusercontent.com/kewonit/aeris/main/public/models/aircraft/helicopter.glb",
+    "url": "/api/models/helicopter",
     "source": "kewonit/aeris · FlightAirMap",
     "license": "GPL-2.0"
   },
@@ -60,7 +60,7 @@ export const AIRCRAFT_ASSETS:AircraftAsset[]=[
     "id": "narrowbody",
     "name": "Narrowbody Airliner",
     "category": "Airliner",
-    "url": "https://raw.githubusercontent.com/kewonit/aeris/main/public/models/aircraft/narrowbody.glb",
+    "url": "/api/models/narrowbody",
     "source": "kewonit/aeris · FlightAirMap",
     "license": "GPL-2.0"
   },
@@ -68,7 +68,7 @@ export const AIRCRAFT_ASSETS:AircraftAsset[]=[
     "id": "regional-jet",
     "name": "Regional Jet",
     "category": "Regional jet",
-    "url": "https://raw.githubusercontent.com/kewonit/aeris/main/public/models/aircraft/regional-jet.glb",
+    "url": "/api/models/regional-jet",
     "source": "kewonit/aeris · FlightAirMap",
     "license": "GPL-2.0"
   },
@@ -76,7 +76,7 @@ export const AIRCRAFT_ASSETS:AircraftAsset[]=[
     "id": "turboprop",
     "name": "Turboprop Aircraft",
     "category": "Turboprop",
-    "url": "https://raw.githubusercontent.com/kewonit/aeris/main/public/models/aircraft/turboprop.glb",
+    "url": "/api/models/turboprop",
     "source": "kewonit/aeris · FlightAirMap",
     "license": "GPL-2.0"
   },
@@ -84,7 +84,7 @@ export const AIRCRAFT_ASSETS:AircraftAsset[]=[
     "id": "widebody-2eng",
     "name": "Twin-engine Widebody",
     "category": "Airliner",
-    "url": "https://raw.githubusercontent.com/kewonit/aeris/main/public/models/aircraft/widebody-2eng.glb",
+    "url": "/api/models/widebody-2eng",
     "source": "kewonit/aeris · FlightAirMap",
     "license": "GPL-2.0"
   },
@@ -92,7 +92,7 @@ export const AIRCRAFT_ASSETS:AircraftAsset[]=[
     "id": "widebody-4eng",
     "name": "Four-engine Widebody / A380",
     "category": "Airliner",
-    "url": "https://raw.githubusercontent.com/kewonit/aeris/main/public/models/aircraft/widebody-4eng.glb",
+    "url": "/api/models/widebody-4eng",
     "source": "kewonit/aeris · FlightAirMap",
     "license": "GPL-2.0"
   },
@@ -100,7 +100,7 @@ export const AIRCRAFT_ASSETS:AircraftAsset[]=[
     "id": "boeing747",
     "name": "Boeing 747",
     "category": "Airliner",
-    "url": "https://raw.githubusercontent.com/edison16a/pheonix/main/public/models/airplane.glb",
+    "url": "/api/models/boeing747",
     "source": "edison16a/pheonix · original Sketchfab model by zairiq-123",
     "license": "CC-BY-4.0"
   },
@@ -108,7 +108,7 @@ export const AIRCRAFT_ASSETS:AircraftAsset[]=[
     "id": "atr72",
     "name": "ATR 72-600",
     "category": "Turboprop airliner",
-    "url": "https://raw.githubusercontent.com/edison16a/pheonix/main/public/models/atr72.glb",
+    "url": "/api/models/atr72",
     "source": "edison16a/pheonix · original Sketchfab model by Oyan3D",
     "license": "CC-BY-4.0"
   },
@@ -116,7 +116,7 @@ export const AIRCRAFT_ASSETS:AircraftAsset[]=[
     "id": "boeing787",
     "name": "Boeing 787-9",
     "category": "Airliner",
-    "url": "https://raw.githubusercontent.com/edison16a/pheonix/main/public/models/b789.glb",
+    "url": "/api/models/boeing787",
     "source": "edison16a/pheonix · original Sketchfab model by Nobilis 2",
     "license": "CC-BY-4.0"
   },
@@ -124,7 +124,7 @@ export const AIRCRAFT_ASSETS:AircraftAsset[]=[
     "id": "bell206",
     "name": "Bell 206 JetRanger",
     "category": "Helicopter",
-    "url": "https://raw.githubusercontent.com/edison16a/pheonix/main/public/models/bell206.glb",
+    "url": "/api/models/bell206",
     "source": "edison16a/pheonix · original Sketchfab model by terran4627",
     "license": "CC-BY-4.0"
   },
@@ -132,7 +132,7 @@ export const AIRCRAFT_ASSETS:AircraftAsset[]=[
     "id": "cessna172",
     "name": "Cessna 172",
     "category": "Light aircraft",
-    "url": "https://raw.githubusercontent.com/edison16a/pheonix/main/public/models/c172.glb",
+    "url": "/api/models/cessna172",
     "source": "edison16a/pheonix · original Sketchfab model by e737",
     "license": "CC-BY-4.0"
   },
@@ -140,7 +140,7 @@ export const AIRCRAFT_ASSETS:AircraftAsset[]=[
     "id": "citation",
     "name": "Cessna Citation",
     "category": "Business jet",
-    "url": "https://raw.githubusercontent.com/edison16a/pheonix/main/public/models/citation2.glb",
+    "url": "/api/models/citation",
     "source": "edison16a/pheonix · original Sketchfab model by BlenderCommunityHead",
     "license": "CC-BY-4.0"
   },
@@ -148,7 +148,7 @@ export const AIRCRAFT_ASSETS:AircraftAsset[]=[
     "id": "mq9",
     "name": "MQ-9",
     "category": "Unmanned aircraft",
-    "url": "https://raw.githubusercontent.com/edison16a/pheonix/main/public/models/mq9.glb",
+    "url": "/api/models/mq9",
     "source": "edison16a/pheonix · original Sketchfab model by IProZenoN",
     "license": "CC-BY-4.0"
   },
@@ -156,7 +156,7 @@ export const AIRCRAFT_ASSETS:AircraftAsset[]=[
     "id": "private-jet",
     "name": "Private Jet",
     "category": "Business jet",
-    "url": "https://raw.githubusercontent.com/edison16a/pheonix/main/public/models/jet.glb",
+    "url": "/api/models/private-jet",
     "source": "edison16a/pheonix · original Sketchfab model by Nick the Name",
     "license": "CC-BY-4.0"
   },
@@ -164,7 +164,7 @@ export const AIRCRAFT_ASSETS:AircraftAsset[]=[
     "id": "mig29",
     "name": "Mikoyan MiG-29 Fulcrum",
     "category": "Fighter",
-    "url": "https://raw.githubusercontent.com/lekandigital/flight-playground/main/dist/flightgear/mig29/model.glb",
+    "url": "/api/models/mig29",
     "source": "lekandigital/flight-playground · FlightGear aircraft import",
     "license": "GPL (version not specified in supplied notice)"
   },
@@ -172,7 +172,7 @@ export const AIRCRAFT_ASSETS:AircraftAsset[]=[
     "id": "p51d",
     "name": "North American P-51D Mustang",
     "category": "Warbird",
-    "url": "https://raw.githubusercontent.com/lekandigital/flight-playground/main/dist/flightgear/p51d/model.glb",
+    "url": "/api/models/p51d",
     "source": "lekandigital/flight-playground · FlightGear aircraft import",
     "license": "GPL"
   }
