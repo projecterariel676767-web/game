@@ -34,7 +34,7 @@ export default function HangarScene({selectedId,onSelect}:Props){
   const scene=sceneRef.current;if(!scene)return;const token=++loadToken.current;setLoading(true);setError('');
   if(aircraftRef.current){scene.remove(aircraftRef.current);aircraftRef.current=null;}
   mixerRef.current?.stopAllAction();mixerRef.current=null;
-  const loader=new GLTFLoader();
+  const loader=new GLTFLoader();loader.setResourcePath('/api/models/'+selected.id+'/');
   loader.load(selected.url,gltf=>{
    if(token!==loadToken.current||!sceneRef.current)return;
    const root=gltf.scene;root.updateMatrixWorld(true);
