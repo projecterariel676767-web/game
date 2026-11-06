@@ -5,7 +5,7 @@ export const AIRCRAFT_ASSETS:AircraftAsset[]=[
     "name": "Airbus A320 · S7 Airlines",
     "category": "Airliner",
     "url": "https://raw.githubusercontent.com/wprojecter-cmd/flight-simulator/main/airbus_a320_s7_airlines.glb",
-    "source": "User aircraft repository",
+    "source": "User-supplied flight-simulator repository",
     "license": "Source repository terms"
   },
   {
@@ -13,176 +13,184 @@ export const AIRCRAFT_ASSETS:AircraftAsset[]=[
     "name": "SR-72 Darkstar",
     "category": "Experimental jet",
     "url": "https://raw.githubusercontent.com/wprojecter-cmd/flight-simulator/main/static/models/lockheed_martin_sr72_darkstar__topgun_maverick.glb",
-    "source": "User aircraft repository",
+    "source": "User-supplied flight-simulator repository",
     "license": "Source repository terms"
   },
   {
-    "id": "ultralight",
-    "name": "Open Frame Ultralight",
-    "category": "Ultralight",
-    "url": "https://cdn.3dassets.dev/assets/32575/v1/model.glb",
-    "source": "3DAssets.dev",
-    "license": "CC0 1.0"
-  },
-  {
-    "id": "surveillance-drone",
-    "name": "Fixed Wing Surveillance Drone",
-    "category": "Drone",
-    "url": "https://cdn.3dassets.dev/assets/32809/v1/model.glb",
-    "source": "3DAssets.dev",
-    "license": "CC0 1.0"
-  },
-  {
-    "id": "gyroplane",
-    "name": "Two Seat Gyroplane",
-    "category": "Gyroplane",
-    "url": "https://cdn.3dassets.dev/assets/32806/v1/model.glb",
-    "source": "3DAssets.dev",
-    "license": "CC0 1.0"
-  },
-  {
-    "id": "electric-trainer",
-    "name": "Electric Two Seat Trainer",
-    "category": "Trainer",
-    "url": "https://cdn.3dassets.dev/assets/32582/v1/model.glb",
-    "source": "3DAssets.dev",
-    "license": "CC0 1.0"
-  },
-  {
-    "id": "warbird",
-    "name": "Radial Engine Warbird Fighter",
-    "category": "Warbird",
-    "url": "https://cdn.3dassets.dev/assets/32595/v1/model.glb",
-    "source": "3DAssets.dev",
-    "license": "CC0 1.0"
-  },
-  {
-    "id": "low-wing-cruise",
-    "name": "Low Wing Single · In Flight",
-    "category": "Light aircraft",
-    "url": "https://cdn.3dassets.dev/assets/32597/v1/model.glb",
-    "source": "3DAssets.dev",
-    "license": "CC0 1.0"
-  },
-  {
-    "id": "twin-piston-cruise",
-    "name": "Light Twin · In Flight",
-    "category": "Twin engine",
-    "url": "https://cdn.3dassets.dev/assets/32598/v1/model.glb",
-    "source": "3DAssets.dev",
-    "license": "CC0 1.0"
-  },
-  {
-    "id": "tiltrotor",
-    "name": "Tiltrotor Transport",
-    "category": "Tiltrotor",
-    "url": "https://cdn.3dassets.dev/assets/32811/v1/model.glb",
-    "source": "3DAssets.dev",
-    "license": "CC0 1.0"
-  },
-  {
-    "id": "survey-twin",
-    "name": "Survey Twin · Sensor Pod",
-    "category": "Survey aircraft",
-    "url": "https://cdn.3dassets.dev/assets/32601/v1/model.glb",
-    "source": "3DAssets.dev",
-    "license": "CC0 1.0"
-  },
-  {
-    "id": "light-sport",
-    "name": "Light Sport Aircraft",
-    "category": "Light aircraft",
-    "url": "https://cdn.3dassets.dev/assets/32578/v1/model.glb",
-    "source": "3DAssets.dev",
-    "license": "CC0 1.0"
-  },
-  {
-    "id": "utility-heli",
-    "name": "Light Turbine Utility Helicopter",
-    "category": "Helicopter",
-    "url": "https://cdn.3dassets.dev/assets/32802/v1/model.glb",
-    "source": "3DAssets.dev",
-    "license": "CC0 1.0"
-  },
-  {
-    "id": "tandem-heli",
-    "name": "Tandem Rotor Transport Helicopter",
-    "category": "Helicopter",
-    "url": "https://cdn.3dassets.dev/assets/32803/v1/model.glb",
-    "source": "3DAssets.dev",
-    "license": "CC0 1.0"
-  },
-  {
-    "id": "floatplane",
-    "name": "High Wing Single · Floatplane",
-    "category": "Floatplane",
-    "url": "https://cdn.3dassets.dev/assets/32603/v1/model.glb",
-    "source": "3DAssets.dev",
-    "license": "CC0 1.0"
-  },
-  {
-    "id": "poly-single",
-    "name": "Single Engine Light Aircraft",
-    "category": "Light aircraft",
-    "url": "https://polyfork.dev/cdn/single-engine-light-aircraft-24478f.glb",
-    "source": "Polyfork",
-    "license": "CC BY 4.0"
-  },
-  {
-    "id": "poly-narrow",
-    "name": "Narrow Body Airliner",
+    "id": "b737",
+    "name": "Boeing 737",
     "category": "Airliner",
-    "url": "https://polyfork.dev/cdn/narrow-body-airliner-619183.glb",
-    "source": "Polyfork",
-    "license": "CC BY 4.0"
+    "url": "https://raw.githubusercontent.com/kewonit/aeris/main/public/models/aircraft/b737.glb",
+    "source": "kewonit/aeris · FlightAirMap / Flightradar24",
+    "license": "GPL-2.0"
   },
   {
-    "id": "poly-wide",
-    "name": "Widebody Airliner",
-    "category": "Airliner",
-    "url": "https://polyfork.dev/cdn/widebody-airliner-ae0a5a.glb",
-    "source": "Polyfork",
-    "license": "CC BY 4.0"
-  },
-  {
-    "id": "poly-turboprop",
-    "name": "Regional Turboprop",
-    "category": "Turboprop",
-    "url": "https://polyfork.dev/cdn/regional-turboprop-097f26.glb",
-    "source": "Polyfork",
-    "license": "CC BY 4.0"
-  },
-  {
-    "id": "poly-business",
+    "id": "bizjet",
     "name": "Business Jet",
     "category": "Business jet",
-    "url": "https://polyfork.dev/cdn/business-jet-684611.glb",
-    "source": "Polyfork",
-    "license": "CC BY 4.0"
+    "url": "https://raw.githubusercontent.com/kewonit/aeris/main/public/models/aircraft/bizjet.glb",
+    "source": "kewonit/aeris · FlightAirMap",
+    "license": "GPL-2.0"
   },
   {
-    "id": "poly-twin",
-    "name": "Twin Engine Piston Light Aircraft",
-    "category": "Twin engine",
-    "url": "https://polyfork.dev/cdn/twin-engine-piston-light-f417c7.glb",
-    "source": "Polyfork",
-    "license": "CC BY 4.0"
+    "id": "drone",
+    "name": "Unmanned Aerial Vehicle",
+    "category": "Drone",
+    "url": "https://raw.githubusercontent.com/kewonit/aeris/main/public/models/aircraft/drone.glb",
+    "source": "kewonit/aeris · FlightAirMap",
+    "license": "GPL-2.0"
   },
   {
-    "id": "poly-heli",
-    "name": "Light Helicopter",
+    "id": "fighter",
+    "name": "Fighter Aircraft",
+    "category": "Military jet",
+    "url": "https://raw.githubusercontent.com/kewonit/aeris/main/public/models/aircraft/fighter.glb",
+    "source": "kewonit/aeris · FlightAirMap",
+    "license": "GPL-2.0"
+  },
+  {
+    "id": "generic",
+    "name": "Generic A320-style Airliner",
+    "category": "Airliner",
+    "url": "https://raw.githubusercontent.com/kewonit/aeris/main/public/models/aircraft/generic.glb",
+    "source": "kewonit/aeris · FlightAirMap",
+    "license": "GPL-2.0"
+  },
+  {
+    "id": "glider",
+    "name": "Sailplane",
+    "category": "Glider",
+    "url": "https://raw.githubusercontent.com/kewonit/aeris/main/public/models/aircraft/glider.glb",
+    "source": "kewonit/aeris · FlightAirMap",
+    "license": "GPL-2.0"
+  },
+  {
+    "id": "helicopter",
+    "name": "Utility Helicopter",
     "category": "Helicopter",
-    "url": "https://polyfork.dev/cdn/helicopter-9d1986.glb",
-    "source": "Polyfork",
-    "license": "CC BY 4.0"
+    "url": "https://raw.githubusercontent.com/kewonit/aeris/main/public/models/aircraft/helicopter.glb",
+    "source": "kewonit/aeris · FlightAirMap",
+    "license": "GPL-2.0"
   },
   {
-    "id": "poly-cargo",
-    "name": "Cargo Freighter",
-    "category": "Cargo aircraft",
-    "url": "https://polyfork.dev/cdn/cargo-freighter-b4377e.glb",
-    "source": "Polyfork",
-    "license": "CC BY 4.0"
+    "id": "light-prop",
+    "name": "Light Propeller Aircraft",
+    "category": "Light aircraft",
+    "url": "https://raw.githubusercontent.com/kewonit/aeris/main/public/models/aircraft/light-prop.glb",
+    "source": "kewonit/aeris · FlightAirMap",
+    "license": "GPL-2.0"
+  },
+  {
+    "id": "narrowbody",
+    "name": "Narrowbody Airliner",
+    "category": "Airliner",
+    "url": "https://raw.githubusercontent.com/kewonit/aeris/main/public/models/aircraft/narrowbody.glb",
+    "source": "kewonit/aeris · FlightAirMap",
+    "license": "GPL-2.0"
+  },
+  {
+    "id": "regional-jet",
+    "name": "Regional Jet",
+    "category": "Regional jet",
+    "url": "https://raw.githubusercontent.com/kewonit/aeris/main/public/models/aircraft/regional-jet.glb",
+    "source": "kewonit/aeris · FlightAirMap",
+    "license": "GPL-2.0"
+  },
+  {
+    "id": "turboprop",
+    "name": "Turboprop Aircraft",
+    "category": "Turboprop",
+    "url": "https://raw.githubusercontent.com/kewonit/aeris/main/public/models/aircraft/turboprop.glb",
+    "source": "kewonit/aeris · FlightAirMap",
+    "license": "GPL-2.0"
+  },
+  {
+    "id": "widebody-2eng",
+    "name": "Twin-engine Widebody",
+    "category": "Airliner",
+    "url": "https://raw.githubusercontent.com/kewonit/aeris/main/public/models/aircraft/widebody-2eng.glb",
+    "source": "kewonit/aeris · FlightAirMap",
+    "license": "GPL-2.0"
+  },
+  {
+    "id": "widebody-4eng",
+    "name": "Four-engine Widebody / A380",
+    "category": "Airliner",
+    "url": "https://raw.githubusercontent.com/kewonit/aeris/main/public/models/aircraft/widebody-4eng.glb",
+    "source": "kewonit/aeris · FlightAirMap",
+    "license": "GPL-2.0"
+  },
+  {
+    "id": "boeing747",
+    "name": "Boeing 747",
+    "category": "Airliner",
+    "url": "https://raw.githubusercontent.com/edison16a/pheonix/main/public/models/airplane.glb",
+    "source": "edison16a/pheonix · original Sketchfab model by zairiq-123",
+    "license": "CC-BY-4.0"
+  },
+  {
+    "id": "atr72",
+    "name": "ATR 72-600",
+    "category": "Turboprop airliner",
+    "url": "https://raw.githubusercontent.com/edison16a/pheonix/main/public/models/atr72.glb",
+    "source": "edison16a/pheonix · original Sketchfab model by Oyan3D",
+    "license": "CC-BY-4.0"
+  },
+  {
+    "id": "boeing787",
+    "name": "Boeing 787-9",
+    "category": "Airliner",
+    "url": "https://raw.githubusercontent.com/edison16a/pheonix/main/public/models/b789.glb",
+    "source": "edison16a/pheonix · original Sketchfab model by Nobilis 2",
+    "license": "CC-BY-4.0"
+  },
+  {
+    "id": "bell206",
+    "name": "Bell 206 JetRanger",
+    "category": "Helicopter",
+    "url": "https://raw.githubusercontent.com/edison16a/pheonix/main/public/models/bell206.glb",
+    "source": "edison16a/pheonix · original Sketchfab model by terran4627",
+    "license": "CC-BY-4.0"
+  },
+  {
+    "id": "cessna172",
+    "name": "Cessna 172",
+    "category": "Light aircraft",
+    "url": "https://raw.githubusercontent.com/edison16a/pheonix/main/public/models/c172.glb",
+    "source": "edison16a/pheonix · original Sketchfab model by e737",
+    "license": "CC-BY-4.0"
+  },
+  {
+    "id": "citation",
+    "name": "Cessna Citation",
+    "category": "Business jet",
+    "url": "https://raw.githubusercontent.com/edison16a/pheonix/main/public/models/citation2.glb",
+    "source": "edison16a/pheonix · original Sketchfab model by BlenderCommunityHead",
+    "license": "CC-BY-4.0"
+  },
+  {
+    "id": "mq9",
+    "name": "MQ-9",
+    "category": "Unmanned aircraft",
+    "url": "https://raw.githubusercontent.com/edison16a/pheonix/main/public/models/mq9.glb",
+    "source": "edison16a/pheonix · original Sketchfab model by IProZenoN",
+    "license": "CC-BY-4.0"
+  },
+  {
+    "id": "private-jet",
+    "name": "Private Jet",
+    "category": "Business jet",
+    "url": "https://raw.githubusercontent.com/edison16a/pheonix/main/public/models/jet.glb",
+    "source": "edison16a/pheonix · original Sketchfab model by Nick the Name",
+    "license": "CC-BY-4.0"
+  },
+  {
+    "id": "trainer",
+    "name": "Generic Airplane",
+    "category": "Trainer",
+    "url": "https://raw.githubusercontent.com/edison16a/pheonix/main/public/models/airplane.glb",
+    "source": "edison16a/pheonix · original Sketchfab model by zairiq-123",
+    "license": "CC-BY-4.0"
   }
 ];
 export const DEFAULT_AIRCRAFT_ID='s7-a320';
