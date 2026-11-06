@@ -34,7 +34,7 @@ async function groqReply(userId:string,content:string){
  const key=process.env.GROQ_API_KEY;if(!key)throw Object.assign(new Error('Groq is not configured. Add GROQ_API_KEY in Render environment variables.'),{status:503});
  const history=await Message.find({userId}).sort({createdAt:-1}).limit(12).lean();
  const conversation=history.reverse().map((m:any)=>({role:m.role==='assistant'?'assistant':'user',content:m.content}));
- const response=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{Authorization:'Bearer '+key,'Content-Type':'application/json'},body:JSON.stringify({model:process.env.GROQ_CHAT_MODEL||'llama-3.3-70b-versatile',messages:[{role:'system',content:'You are Pin World AI, a helpful assistant for geography, Earth observation, aviation, travel and general questions. Answer clearly in the language used by the user.'},...conversation],temperature:0.6,max_tokens:1200}),signal:AbortSignal.timeout(45000)});
+ const response=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{Authorization:'Bearer '+key,'Content-Type':'application/json'},body:JSON.stringify({model:process.env.GROQ_CHAT_MODEL||'openai/gpt-oss-120b',messages:[{role:'system',content:'You are Pin World AI, a helpful assistant for geography, Earth observation, aviation, travel and general questions. Answer clearly in the language used by the user.'},...conversation],temperature:0.6,max_tokens:1200}),signal:AbortSignal.timeout(45000)});
  const data:any=await response.json().catch(()=>({}));if(!response.ok)throw Object.assign(new Error(data.error?.message||'Groq chat request failed'),{status:502});
  return String(data.choices?.[0]?.message?.content||'I could not generate a response.');
 }
