@@ -1,14 +1,12 @@
 {
-  "name": "pin-world",
-  "version": "0.1.0",
-  "private": true,
-  "workspaces": ["client", "server", "mobile", "shared"],
-  "scripts": {
-    "dev": "concurrently -k \"npm:dev:server\" \"npm:dev:client\"",
-    "dev:client": "npm --workspace client run dev",
-    "dev:server": "npm --workspace server run dev",
-    "build": "npm --workspace client run build",
-    "start": "npm --workspace server run start"
+  "name":"pin-world","version":"0.1.0","private":true,
+  "workspaces":["client","server","mobile","shared"],
+  "scripts":{
+    "dev":"concurrently -k \"npm:dev:server\" \"npm:dev:client\"",
+    "dev:client":"npm --workspace client run dev",
+    "dev:server":"npm --workspace server run dev",
+    "build":"npm --workspace server run build && npm --workspace client run build",
+    "start":"node server/dist/index.js"
   },
-  "devDependencies": { "concurrently": "^9.1.2", "typescript": "^5.7.3" }
+  "devDependencies":{"concurrently":"^9.1.2","typescript":"^5.7.3"}
 }
