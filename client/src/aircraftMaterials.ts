@@ -37,8 +37,8 @@ export function applyAircraftFinish(root:THREE.Object3D,id:string){
     const target=glassPart?0x263b4b:rubberPart?0x20262b:accentPart?finish.accent:finish.body;
     (material as any).color.setHex(target);
     if(material instanceof THREE.MeshStandardMaterial){
-     material.metalness=glassPart?.35:rubberPart?.05:.22;
-     material.roughness=glassPart?.22:rubberPart?.82:.48;
+     material.metalness=glassPart ? .35 : rubberPart ? .05 : .22;
+     material.roughness=glassPart ? .22 : rubberPart ? .82 : .48;
      if(glassPart){material.transparent=true;material.opacity=.88;}
     }
    }else if(material instanceof THREE.MeshStandardMaterial){
