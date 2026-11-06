@@ -68,7 +68,7 @@ app.get('/api/models/:id',async(req,res)=>{
 
 
 app.get('/api/models/:id/*',async(req,res)=>{
- const source=aircraftModelSources[req.params.id],relative=String(req.params[0]||'');
+ const source=aircraftModelSources[req.params.id],wildcard=(req.params as Record<string,string| string[]>)[0],relative=Array.isArray(wildcard)?wildcard.join('/'):String(wildcard||'');
  if(!source||!relative||relative.split('/').some((part:string)=>!part||part==='.'||part==='..'))return res.status(404).end();
  try{
   const base=new URL(source),asset=new URL(relative,source);
