@@ -3,8 +3,8 @@ import * as THREE from 'three';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {applyAircraftFinish} from './aircraftMaterials';
 
-type Props={speed:number;altitude:number;modelUrl:string;onExit:()=>void};
-export default function FlightView({speed,altitude,modelUrl,onExit}:Props){
+type Props={speed:number;altitude:number;modelId:string;modelUrl:string;onExit:()=>void};
+export default function FlightView({speed,altitude,modelId,modelUrl,onExit}:Props){
  const mount=useRef<HTMLDivElement>(null);const [modelState,setModelState]=useState('Loading aircraft model…');
  useEffect(()=>{
   const host=mount.current;if(!host)return;
@@ -21,7 +21,7 @@ export default function FlightView({speed,altitude,modelUrl,onExit}:Props){
   function zRandom(){return (Math.random()-.5)*200;}
   const aircraft=new THREE.Group();scene.add(aircraft);let aircraftModel:THREE.Object3D|null=null;let mixer:THREE.AnimationMixer|null=null;let modelToken=0;
   let yaw=0,pitch=0,roll=0,forward=Math.max(80,speed)/3.6;const keys=new Set<string>();let last=performance.now(),frame=0;
-  const loader=new GLTFLoader();const thisToken=++modelToken;loader.load(modelUrl,gltf=>{if(thisToken!==modelToken)return;const root=gltf.scene;applyAircraftFinish(root,modelUrl.split('/').pop()||'');root.updateMatrixWorld(true);const box=new THREE.Box3().setFromObject(root),dim=box.getSize(new THREE.Vector3()),center=box.getCenter(new THREE.Vector3()),scale=24/(Math.max(dim.x,dim.y,dim.z)||1);root.scale.setScalar(scale);root.position.set(-center.x*scale,-box.min.y*scale,-center.z*scale);root.rotation.y=Math.PI;root.position.z=45;root.position.y=-5;aircraft.add(root);aircraftModel=root;if(gltf.animations.length){mixer=new THREE.AnimationMixer(root);gltf.animations.forEach(a=>mixer!.clipAction(a).play());}setModelState('AIRCRAFT LOADED · EXTERNAL GLB');},err=>{console.error('Flight aircraft GLB load failed',modelUrl,err);setModelState('Aircraft model could not load through /api/models. Check Render logs.');});
+  const loader=new GLTFLoader();const thisToken=++modelToken;loader.load(modelUrl,gltf=>{if(thisToken!==modelToken)return;const root=gltf.scene;applyAircraftFinish(root,modelId);root.updateMatrixWorld(true);const box=new THREE.Box3().setFromObject(root),dim=box.getSize(new THREE.Vector3()),center=box.getCenter(new THREE.Vector3()),scale=24/(Math.max(dim.x,dim.y,dim.z)||1);root.scale.setScalar(scale);root.position.set(-center.x*scale,-box.min.y*scale,-center.z*scale);root.rotation.y=Math.PI;root.position.z=45;root.position.y=-5;aircraft.add(root);aircraftModel=root;if(gltf.animations.length){mixer=new THREE.AnimationMixer(root);gltf.animations.forEach(a=>mixer!.clipAction(a).play());}setModelState('AIRCRAFT LOADED · EXTERNAL GLB');},err=>{console.error('Flight aircraft GLB load failed',modelUrl,err);setModelState('Aircraft model could not load through /api/models. Check Render logs.');});
   const cockpit=new THREE.Group();camera.add(cockpit);scene.add(camera);
   const frameMat=new THREE.MeshStandardMaterial({color:0x111c28,metalness:.65,roughness:.35});
   const bar=(w:number,h:number,d:number,x:number,y:number,z:number)=>{const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),frameMat);m.position.set(x,y,z);cockpit.add(m);};
@@ -48,6 +48,6 @@ export default function FlightView({speed,altitude,modelUrl,onExit}:Props){
   const cockpitButton=host.querySelector<HTMLButtonElement>('[data-view="cockpit"]'),chaseButton=host.querySelector<HTMLButtonElement>('[data-view="chase"]');
   const onCockpit=()=>setView('cockpit'),onChase=()=>setView('chase');cockpitButton?.addEventListener('click',onCockpit);chaseButton?.addEventListener('click',onChase);
   return()=>{modelToken++;mixer?.stopAllAction();cancelAnimationFrame(frame);observer.disconnect();document.exitPointerLock?.();window.removeEventListener('keydown',keydown);window.removeEventListener('keyup',keyup);window.removeEventListener('mousemove',mouse);renderer.domElement.removeEventListener('click',click);cockpitButton?.removeEventListener('click',onCockpit);chaseButton?.removeEventListener('click',onChase);renderer.dispose();geo.dispose();scene.traverse(o=>{if(o instanceof THREE.Mesh){o.geometry.dispose();const mats=Array.isArray(o.material)?o.material:[o.material];mats.forEach(m=>m.dispose());}});if(host.contains(renderer.domElement))host.removeChild(renderer.domElement);};
- },[speed,altitude,modelUrl]);
+ },[modelId,modelUrl]);
  return <div className="flight-scene" ref={mount}><div className="flight-scene-hud"><span>PIN WORLD · FLIGHT SIMULATOR</span><span>SPD {speed} KM/H · ALT {altitude.toLocaleString()} M</span><small>CLICK VIEW · MOUSE LOOK · WASD / ARROWS · Q/E BANK</small><small>{modelState}</small></div><div className="flight-view-switch"><button data-view="cockpit">Cockpit</button><button data-view="chase">Chase camera</button></div><button className="flight-exit" onClick={onExit}>EXIT FLIGHT</button></div>;
 }
