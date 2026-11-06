@@ -25,14 +25,6 @@ export const AIRCRAFT_ASSETS:AircraftAsset[]=[
     "license": "GPL-2.0"
   },
   {
-    "id": "bizjet",
-    "name": "Business Jet",
-    "category": "Business jet",
-    "url": "https://raw.githubusercontent.com/kewonit/aeris/main/public/models/aircraft/bizjet.glb",
-    "source": "kewonit/aeris · FlightAirMap",
-    "license": "GPL-2.0"
-  },
-  {
     "id": "drone",
     "name": "Unmanned Aerial Vehicle",
     "category": "Drone",
