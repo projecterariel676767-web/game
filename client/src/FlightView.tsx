@@ -8,8 +8,8 @@ type Props={speed:number;altitude:number;modelId:string;modelUrl:string;origin?:
 const flagEmoji=(code:string)=>code&&code.length===2?String.fromCodePoint(...code.toUpperCase().split('').map(c=>127397+c.charCodeAt(0))):'🌐';
 async function applyCesiumImagery(viewer:Cesium.Viewer,type:ImageryType){
  const layers=viewer.imageryLayers;layers.removeAll(true);
- if(type==='grid'){layers.addImageryProvider(new Cesium.GridImageryProvider());return;}
- if(type==='coordinates'){layers.addImageryProvider(new Cesium.TileCoordinatesImageryProvider());return;}
+ if(type==='grid'){layers.addImageryProvider(new Cesium.GridImageryProvider({}));return;}
+ if(type==='coordinates'){layers.addImageryProvider(new Cesium.TileCoordinatesImageryProvider({}));return;}
  const assetId=type==='roads'?4:type==='satellite-labels'?3:2;
  const provider=await Cesium.IonImageryProvider.fromAssetId(assetId);
  if(!viewer.isDestroyed())layers.addImageryProvider(provider);
