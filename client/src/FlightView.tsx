@@ -5,7 +5,7 @@ import 'cesium/Build/Cesium/Widgets/widgets.css';
 type ImageryType='satellite'|'satellite-labels'|'roads'|'grid'|'coordinates';
 type MapMode='2d'|'3d';
 type Props={speed:number;altitude:number;modelId:string;modelUrl:string;origin?:string;timeOfDay:number;showMap:boolean;selectedFlag:string;imageryType:ImageryType;mapMode:MapMode;showBuildings:boolean;headingOffset:number;onCountryChange:(code:string,name:string)=>void;onExit:()=>void};
-const COUNTRY_NAMES:Record<string,string>={PS:'Палестина, Западный берег',IL:'Израиль'}; const countryName=(code:string,fallback:string)=>COUNTRY_NAMES[code.toUpperCase()]||fallback; const flagUrl=(code:string)=>code&&code.length===2?'https://flagcdn.com/w80/'+code.toLowerCase()+'.png':'';
+const COUNTRY_NAMES:Record<string,string>={PS:'Палестина, Западный берег',IL:'Israel'}; const countryName=(code:string,fallback:string)=>COUNTRY_NAMES[code.toUpperCase()]||fallback; const flagUrl=(code:string)=>code&&code.length===2?'https://flagcdn.com/w80/'+code.toLowerCase()+'.png':'';
 async function applyCesiumImagery(viewer:Cesium.Viewer,type:ImageryType){
  const layers=viewer.imageryLayers;layers.removeAll(true);
  if(type==='grid'){layers.addImageryProvider(new Cesium.GridImageryProvider({}));return;}
