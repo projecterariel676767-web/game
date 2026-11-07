@@ -2,25 +2,20 @@ import {useEffect,useRef,useState} from 'react';
 import * as Cesium from 'cesium';
 import 'cesium/Build/Cesium/Widgets/widgets.css';
 
-type ImageryType='satellite'|'night'|'grid'|'coordinates';
+type ImageryType='satellite'|'satellite-labels'|'roads'|'grid'|'coordinates';
 type MapMode='2d'|'3d';
-type Props={speed:number;altitude:number;modelId:string;modelUrl:string;origin?:string;timeOfDay:number;showMap:boolean;selectedFlag:string;imageryType:ImageryType;mapMode:MapMode;showBuildings:boolean;onCountryChange:(code:string,name:string)=>void;onExit:()=>void};
+type Props={speed:number;altitude:number;modelId:string;modelUrl:string;origin?:string;timeOfDay:number;showMap:boolean;selectedFlag:string;imageryType:ImageryType;mapMode:MapMode;showBuildings:boolean;headingOffset:number;onCountryChange:(code:string,name:string)=>void;onExit:()=>void};
 const flagEmoji=(code:string)=>code&&code.length===2?String.fromCodePoint(...code.toUpperCase().split('').map(c=>127397+c.charCodeAt(0))):'🌐';
 async function applyCesiumImagery(viewer:Cesium.Viewer,type:ImageryType){
  const layers=viewer.imageryLayers;layers.removeAll(true);
  if(type==='grid'){layers.addImageryProvider(new Cesium.GridImageryProvider());return;}
  if(type==='coordinates'){layers.addImageryProvider(new Cesium.TileCoordinatesImageryProvider());return;}
- const satellite=await Cesium.IonImageryProvider.fromAssetId(3830183);
- if(viewer.isDestroyed())return;
- layers.addImageryProvider(satellite);
- if(type==='night'){
-  const night=await Cesium.IonImageryProvider.fromAssetId(3812);
-  if(viewer.isDestroyed())return;
-  const layer=layers.addImageryProvider(night);layer.alpha=.72;
- }
+ const assetId=type==='roads'?4:type==='satellite-labels'?3:2;
+ const provider=await Cesium.IonImageryProvider.fromAssetId(assetId);
+ if(!viewer.isDestroyed())layers.addImageryProvider(provider);
 }
-export default function FlightView({speed,altitude,modelId,modelUrl,origin,timeOfDay,showMap,selectedFlag,imageryType,mapMode,showBuildings,onCountryChange,onExit}:Props){
- const mount=useRef<HTMLDivElement>(null);const selectedFlagRef=useRef(selectedFlag);selectedFlagRef.current=selectedFlag;const mapMount=useRef<HTMLDivElement>(null);const viewerRef=useRef<Cesium.Viewer|null>(null);const mapViewerRef=useRef<Cesium.Viewer|null>(null);const aircraftRef=useRef<Cesium.Entity|null>(null);const buildingsRef=useRef<Cesium.Cesium3DTileset|null>(null);const [modelState,setModelState]=useState('Initializing Cesium flight world…');const [position,setPosition]=useState({lat:31.5,lon:34.8});const [country,setCountry]=useState({code:'',name:'Locating country…'});
+export default function FlightView({speed,altitude,modelId,modelUrl,origin,timeOfDay,showMap,selectedFlag,imageryType,mapMode,showBuildings,headingOffset,onCountryChange,onExit}:Props){
+ const mount=useRef<HTMLDivElement>(null);const selectedFlagRef=useRef(selectedFlag);selectedFlagRef.current=selectedFlag;const headingOffsetRef=useRef(headingOffset);headingOffsetRef.current=headingOffset;const mapMount=useRef<HTMLDivElement>(null);const viewerRef=useRef<Cesium.Viewer|null>(null);const mapViewerRef=useRef<Cesium.Viewer|null>(null);const aircraftRef=useRef<Cesium.Entity|null>(null);const buildingsRef=useRef<Cesium.Cesium3DTileset|null>(null);const [modelState,setModelState]=useState('Initializing Cesium flight world…');const [position,setPosition]=useState({lat:31.5,lon:34.8});const [country,setCountry]=useState({code:'',name:'Locating country…'});
  useEffect(()=>{
   const host=mount.current;if(!host)return;let alive=true;let viewer:Cesium.Viewer|null=null;let aircraft:Cesium.Entity|null=null;let buildings:Cesium.Cesium3DTileset|null=null;let frame=0;let heading=0,pitch=0;let lat=31.5,lon=34.8;let last=performance.now(),lastUi=0,lastGeo=0,lastGeoLat=0,lastGeoLon=0;let orbitHeading=0,orbitPitch=-.28,orbitRange=260;let dragging=false,lastX=0,lastY=0;
   const parsed=origin?.match(/^\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*$/);if(parsed){lon=Number(parsed[1]);lat=Number(parsed[2]);}
@@ -41,18 +36,18 @@ export default function FlightView({speed,altitude,modelId,modelUrl,origin,timeO
    try{await applyCesiumImagery(viewer,imageryType);setModelState('CESIUM ION IMAGERY · '+imageryType.toUpperCase());}catch(e){console.error('Cesium Ion imagery failed',e);setModelState('CESIUM ION IMAGERY UNAVAILABLE · CHECK ION TOKEN');}
    const pos=Cesium.Cartesian3.fromDegrees(lon,lat,Math.max(altitude,1500));
    // glTF 2.0 faces +Z; Cesium's native model frame is +X-forward. Rotate -90° so the aircraft nose follows the geographic heading.
-   const orientation=Cesium.Transforms.headingPitchRollQuaternion(pos,new Cesium.HeadingPitchRoll(heading-Math.PI/2,pitch,0));
+   const orientation=Cesium.Transforms.headingPitchRollQuaternion(pos,new Cesium.HeadingPitchRoll(heading+Cesium.Math.toRadians(headingOffsetRef.current),pitch,0));
    aircraft=viewer.entities.add({id:'pin-world-player-aircraft',position:pos,orientation,model:{uri:modelUrl,scale:0.14,minimumPixelSize:70,maximumScale:5000,runAnimations:true}});
    aircraftRef.current=aircraft;
    if(cfg.cesiumIonToken&&showBuildings){try{buildings=await Cesium.Cesium3DTileset.fromIonAssetId(96188);if(alive&&viewer){viewer.scene.primitives.add(buildings);buildingsRef.current=buildings;}}catch(e){console.warn('Cesium OSM buildings unavailable',e);}}
    setModelState(cfg.cesiumIonToken?'CESIUM WORLD TERRAIN · CESIUM ION IMAGERY · FREE ORBIT':'CESIUM GLOBE · ADD CESIUM_ION_TOKEN FOR ION TILES');
-   const tick=(now:number)=>{if(!alive||!viewer||!aircraft)return;frame=requestAnimationFrame(tick);const dt=Math.min(.05,(now-last)/1000);last=now;const travel=Math.max(0,speed)/3.6*dt;const metersPerDegree=111320;lat+=Math.cos(heading)*travel/metersPerDegree;lon+=Math.sin(heading)*travel/(metersPerDegree*Math.max(.15,Math.cos(Cesium.Math.toRadians(lat))));if(lon>180)lon-=360;if(lon< -180)lon+=360;const p=Cesium.Cartesian3.fromDegrees(lon,lat,Math.max(altitude,250));aircraft.position=new Cesium.ConstantPositionProperty(p);aircraft.orientation=new Cesium.ConstantProperty(Cesium.Transforms.headingPitchRollQuaternion(p,new Cesium.HeadingPitchRoll(heading-Math.PI/2,pitch,0)));viewer.camera.lookAt(p,new Cesium.HeadingPitchRange(orbitHeading,orbitPitch,orbitRange));if(now-lastUi>700){lastUi=now;setPosition({lat,lon});void setCountryFromPosition(now);}scene.requestRender();};
+   const tick=(now:number)=>{if(!alive||!viewer||!aircraft)return;frame=requestAnimationFrame(tick);const dt=Math.min(.05,(now-last)/1000);last=now;const travel=Math.max(0,speed)/3.6*dt;const metersPerDegree=111320;lat+=Math.cos(heading)*travel/metersPerDegree;lon+=Math.sin(heading)*travel/(metersPerDegree*Math.max(.15,Math.cos(Cesium.Math.toRadians(lat))));if(lon>180)lon-=360;if(lon< -180)lon+=360;const p=Cesium.Cartesian3.fromDegrees(lon,lat,Math.max(altitude,250));aircraft.position=new Cesium.ConstantPositionProperty(p);aircraft.orientation=new Cesium.ConstantProperty(Cesium.Transforms.headingPitchRollQuaternion(p,new Cesium.HeadingPitchRoll(heading+Cesium.Math.toRadians(headingOffsetRef.current),pitch,0)));viewer.camera.lookAt(p,new Cesium.HeadingPitchRange(orbitHeading,orbitPitch,orbitRange));if(now-lastUi>700){lastUi=now;setPosition({lat,lon});void setCountryFromPosition(now);}scene.requestRender();};
    frame=requestAnimationFrame(tick);void setCountryFromPosition(performance.now());
   }catch(e){console.error('Cesium flight initialization failed',e);setModelState('Cesium initialization failed. Check browser console and Cesium token.');}}
   void init();
   const keydown=(e:KeyboardEvent)=>{if((e.target as HTMLElement)?.tagName==='INPUT'||(e.target as HTMLElement)?.tagName==='SELECT')return;const k=e.key.toLowerCase();if(k==='a'||k==='arrowleft')heading-=.035;if(k==='d'||k==='arrowright')heading+=.035;if(k==='w'||k==='arrowup')pitch=Math.min(.45,pitch+.02);if(k==='s'||k==='arrowdown')pitch=Math.max(-.45,pitch-.02);};window.addEventListener('keydown',keydown);
   return()=>{alive=false;cancelAnimationFrame(frame);window.removeEventListener('keydown',keydown);const canvas=viewer?.canvas;if(canvas){canvas.removeEventListener('pointerdown',onDown);canvas.removeEventListener('pointermove',onMove);canvas.removeEventListener('pointerup',onUp);canvas.removeEventListener('pointercancel',onUp);canvas.removeEventListener('wheel',onWheel);}if(viewer&&!viewer.isDestroyed())viewer.destroy();viewerRef.current=null;aircraftRef.current=null;buildingsRef.current=null;};
- },[modelId,modelUrl,origin]);
+ },[modelId,modelUrl,origin,headingOffset]);
  useEffect(()=>{const viewer=viewerRef.current;if(!viewer)return;const date=new Date();date.setHours(Math.floor(timeOfDay),Math.round((timeOfDay%1)*60),0,0);viewer.clock.currentTime=Cesium.JulianDate.fromDate(date);viewer.scene.requestRender();},[timeOfDay]);
  useEffect(()=>{const viewer=viewerRef.current;if(!viewer)return;let alive=true;void applyCesiumImagery(viewer,imageryType).then(()=>{if(alive)viewer.scene.requestRender();}).catch(e=>{console.error('Cesium imagery switch failed',e);if(alive)setModelState('Imagery layer failed · check Cesium Ion asset access');});return()=>{alive=false;};},[imageryType]);
  useEffect(()=>{const viewer=viewerRef.current;if(!viewer)return;let alive=true;if(showBuildings&&!buildingsRef.current){const cfgPromise=fetch('/api/config').then(r=>r.json());void cfgPromise.then(async cfg=>{if(!cfg.cesiumIonToken||!alive)return;try{const tileset=await Cesium.Cesium3DTileset.fromIonAssetId(96188);if(alive&&!viewer.isDestroyed()){viewer.scene.primitives.add(tileset);buildingsRef.current=tileset;}else tileset.destroy();}catch(e){console.warn('OSM buildings tileset failed',e);}});}else if(!showBuildings&&buildingsRef.current){viewer.scene.primitives.remove(buildingsRef.current);buildingsRef.current= null;}return()=>{alive=false;};},[showBuildings]);
